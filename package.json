@@ -2,7 +2,7 @@
   "name": "mock-typescript",
   "displayName": "MockTypescript",
   "description": "Generate mock data from interface class and type of typescript",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.56.0"
   },
@@ -11,6 +11,10 @@
     "Other"
   ],
   "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rlaaudrlf/mock-typescript"
+  },
   "keywords": [
     "types",
     "util",
