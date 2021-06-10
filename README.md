@@ -22,4 +22,9 @@ Can generate mock json from typescript class and interface. currently only class
 
 Generate mock json from typescript class and interface.
 
+## Links
+
+- [Repo](https://github.com/rlaaudrlf/mock-typescript)
+- [Issues](https://github.com/rlaaudrlf/mock-typescript/issues)
+
 **Enjoy!**
