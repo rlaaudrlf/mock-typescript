@@ -13,6 +13,7 @@ Can generate mock json from typescript class and interface. currently only class
 +   class
 + array
 + interface
++ tuple
 
 ## Example:
 ![](https://github.com/rlaaudrlf/mock-typescript/blob/master/image/image1.gif?raw=true)
@@ -26,6 +27,7 @@ Generate mock json from typescript class and interface.
 
 + supprot tuple
 + friendly error message
+
 ## Links
 
 - [Repo](https://github.com/rlaaudrlf/mock-typescript)

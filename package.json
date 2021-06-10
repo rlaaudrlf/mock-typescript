@@ -2,7 +2,7 @@
   "name": "mock-typescript",
   "displayName": "MockTypescript",
   "description": "Generate mock data from interface class and type of typescript",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "engines": {
     "vscode": "^1.56.0"
   },
