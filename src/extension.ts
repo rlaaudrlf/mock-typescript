@@ -24,6 +24,6 @@ async function transformFromSelection() {
     text = getMockFromClass(selectedText, documentText || "");
     copyPaste.copy(text);
   } catch (e) {
-    console.log(e);
+    window.showErrorMessage(e.message);
   }
 }

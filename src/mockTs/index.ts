@@ -4,7 +4,6 @@ import {
   ClassInstancePropertyTypes,
   InterfaceDeclaration,
   Project,
-  PropertyDeclaration,
   PropertySignature,
   SourceFile,
 } from "ts-morph";
@@ -26,35 +25,39 @@ function getClassName(sourceFile: SourceFile) {
 }
 
 export function getMockFromClass(text: string, documentText: string) {
-  let result: string[] = [];
-  let memoryProjectSourceFile: SourceFile | undefined = undefined;
-  let projectSourceFile: SourceFile | undefined = undefined;
   try {
-    memoryProjectSourceFile = memoryProject.createSourceFile("text.ts", text);
-    projectSourceFile = project.createSourceFile(
-      "documentText.ts",
-      documentText
-    );
-
-    let classNames = getClassName(memoryProjectSourceFile);
-
-    result = classNames.map((value) => {
-      return JSON.stringify(
-        genMock(projectSourceFile as SourceFile, value || "", 0)
+    let result: string[] = [];
+    let memoryProjectSourceFile: SourceFile | undefined = undefined;
+    let projectSourceFile: SourceFile | undefined = undefined;
+    try {
+      memoryProjectSourceFile = memoryProject.createSourceFile("text.ts", text);
+      projectSourceFile = project.createSourceFile(
+        "documentText.ts",
+        documentText
       );
-    });
-  } finally {
-    projectSourceFile && project.removeSourceFile(projectSourceFile);
-    memoryProjectSourceFile &&
-      memoryProject.removeSourceFile(memoryProjectSourceFile);
-  }
 
-  return result.join("\n");
+      let classNames = getClassName(memoryProjectSourceFile);
+
+      result = classNames.map((value) => {
+        return JSON.stringify(
+          genMock(projectSourceFile as SourceFile, value || "", 0)
+        );
+      });
+    } finally {
+      projectSourceFile && project.removeSourceFile(projectSourceFile);
+      memoryProjectSourceFile &&
+        memoryProject.removeSourceFile(memoryProjectSourceFile);
+    }
+
+    return result.join("\n");
+  } catch (e) {
+    throw new Error(e);
+  }
 }
 
 function genMock(sourceFile: SourceFile, name: string, depth: number) {
   if (depth > 1000) {
-    throw "max depth!";
+    throw new Error("max depth!");
   }
 
   let classItem: ClassDeclaration | InterfaceDeclaration | undefined =
@@ -76,10 +79,12 @@ function genMock(sourceFile: SourceFile, name: string, depth: number) {
   } else {
     instanceProperties = classItem.getInstanceProperties();
   }
-  instanceProperties.forEach((value) => {
-    let mockValue = genProperty(sourceFile, value, depth);
-    obj[value.getName()] = mockValue;
-  });
+  instanceProperties.forEach(
+    (value: ClassInstancePropertyTypes | PropertySignature) => {
+      let mockValue = genProperty(sourceFile, value, depth);
+      obj[value.getName()] = mockValue;
+    }
+  );
 
   return obj;
 }
@@ -90,6 +95,7 @@ function genProperty(
 ) {
   let mockValue: any = undefined;
   let type = value.getType();
+
   if (type.isArray()) {
     let elementType = type.getArrayElementType();
 
@@ -113,6 +119,8 @@ function genProperty(
     mockValue = Random.string();
   } else if (type.isNumber()) {
     mockValue = Random.natural();
+  } else if (type.isTuple()) {
+    mockValue = [];
   } else if (type.isInterface()) {
     mockValue = genMock(sourceFile, value.getType().getText(), depth);
   } else if (type.isClass()) {
