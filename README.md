@@ -22,6 +22,10 @@ Can generate mock json from typescript class and interface. currently only class
 
 Generate mock json from typescript class and interface.
 
+### 1.1.0
+
++ supprot tuple
++ friendly error message
 ## Links
 
 - [Repo](https://github.com/rlaaudrlf/mock-typescript)

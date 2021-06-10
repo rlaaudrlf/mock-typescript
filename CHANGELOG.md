@@ -1,9 +1,10 @@
 # Change Log
 
-All notable changes to the "typescript" extension will be documented in this file.
+### 1.0.0
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
++ Generate mock json from typescript class and interface.
 
-## [Unreleased]
+### 1.1.0
 
-- Initial release
++ supprot tuple
++ friendly error message
