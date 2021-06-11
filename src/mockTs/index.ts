@@ -73,12 +73,7 @@ function genMock(sourceFile: SourceFile, name: string, depth: number) {
     throw new Error("max depth!");
   }
 
-  let classItem: ClassDeclaration | InterfaceDeclaration | undefined =
-    sourceFile.getInterface(name);
-
-  if (!classItem) {
-    classItem = sourceFile.getClass(name);
-  }
+  let classItem = getTarget(sourceFile, name);
 
   if (!classItem) {
     return;
@@ -86,12 +81,7 @@ function genMock(sourceFile: SourceFile, name: string, depth: number) {
 
   let obj: { [key: string]: any } = {};
   let instanceProperties: ClassInstancePropertyTypes[] | PropertySignature[] =
-    [];
-  if (classItem instanceof InterfaceDeclaration) {
-    instanceProperties = classItem.getProperties();
-  } else {
-    instanceProperties = classItem.getInstanceProperties();
-  }
+    getProperties(classItem);
   instanceProperties.forEach(
     (value: ClassInstancePropertyTypes | PropertySignature) => {
       let mockValue = genProperty(sourceFile, value, depth);
@@ -101,6 +91,27 @@ function genMock(sourceFile: SourceFile, name: string, depth: number) {
 
   return obj;
 }
+function getProperties(classItem: InterfaceDeclaration | ClassDeclaration) {
+  let instanceProperties: ClassInstancePropertyTypes[] | PropertySignature[] =
+    [];
+  if (classItem instanceof InterfaceDeclaration) {
+    instanceProperties = classItem.getProperties();
+  } else {
+    instanceProperties = classItem.getInstanceProperties();
+  }
+  return instanceProperties;
+}
+
+function getTarget(sourceFile: SourceFile, name: string) {
+  let classItem: ClassDeclaration | InterfaceDeclaration | undefined =
+    sourceFile.getInterface(name);
+
+  if (!classItem) {
+    classItem = sourceFile.getClass(name);
+  }
+  return classItem;
+}
+
 function genProperty(
   sourceFile: SourceFile,
   value: PropertySignature | ClassInstancePropertyTypes,
