@@ -24,35 +24,48 @@ function getClassName(sourceFile: SourceFile) {
   ];
 }
 
+function isClassOrInterfaceName(str: string) {
+  return str.indexOf("{") < 0;
+}
+
+function strIsAnonymousObject(str: string) {
+  str = str.concat().trim();
+  return str.startsWith("{") && str.endsWith("}");
+}
+
 export function getMockFromClass(text: string, documentText: string) {
+  let result: string[] = [];
+  let memoryProjectSourceFile: SourceFile | undefined = undefined;
+  let projectSourceFile: SourceFile | undefined = undefined;
   try {
-    let result: string[] = [];
-    let memoryProjectSourceFile: SourceFile | undefined = undefined;
-    let projectSourceFile: SourceFile | undefined = undefined;
-    try {
-      memoryProjectSourceFile = memoryProject.createSourceFile("text.ts", text);
-      projectSourceFile = project.createSourceFile(
-        "documentText.ts",
-        documentText
-      );
-
-      let classNames = getClassName(memoryProjectSourceFile);
-
-      result = classNames.map((value) => {
-        return JSON.stringify(
-          genMock(projectSourceFile as SourceFile, value || "", 0)
-        );
-      });
-    } finally {
-      projectSourceFile && project.removeSourceFile(projectSourceFile);
-      memoryProjectSourceFile &&
-        memoryProject.removeSourceFile(memoryProjectSourceFile);
+    if (strIsAnonymousObject(text)) {
+      text = "class __AnonymousObject__" + text;
     }
 
-    return result.join("\n");
+    memoryProjectSourceFile = memoryProject.createSourceFile("text.ts", text);
+    projectSourceFile = project.createSourceFile(
+      "documentText.ts",
+      documentText + text
+    );
+
+    let classNames = isClassOrInterfaceName(text)
+      ? [text]
+      : getClassName(memoryProjectSourceFile);
+
+    result = classNames.map((value) => {
+      return JSON.stringify(
+        genMock(projectSourceFile as SourceFile, value || "", 0)
+      );
+    });
   } catch (e) {
     throw new Error(e);
+  } finally {
+    projectSourceFile && project.removeSourceFile(projectSourceFile);
+    memoryProjectSourceFile &&
+      memoryProject.removeSourceFile(memoryProjectSourceFile);
   }
+
+  return result.join("\n");
 }
 
 function genMock(sourceFile: SourceFile, name: string, depth: number) {

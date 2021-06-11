@@ -24,8 +24,22 @@ Can generate mock json from typescript class and interface. currently only class
 
 
 <!-- ![](https://github.com/rlaaudrlf/mock-typescript/blob/master/image/image1.gif?raw=true) -->
-<div style="display:flex;justify-content:center">
-<img src="https://github.com/rlaaudrlf/mock-typescript/blob/master/image/image1.gif?raw=true" width = "80%"  alt="" align=center />
+
+### Basic
+<div style="display:flex;align-items:center;flex-direction:column;">
+<img src="https://github.com/rlaaudrlf/mock-typescript/blob/master/image/image1.gif?raw=true" width = "70%"  alt="" align=center />
+</div>
+
+### Copy parameters
+
+<div style="display:flex;align-items:center;flex-direction:column;">
+<img src="https://github.com/rlaaudrlf/mock-typescript/blob/master/image/image2.gif?raw=true" width = "70%"  alt="" align=center />
+</div>
+
+### Copy class
+
+<div style="display:flex;align-items:center;flex-direction:column;">
+<img src="https://github.com/rlaaudrlf/mock-typescript/blob/master/image/image3.gif?raw=true" width = "70%"  alt="" align=center />
 </div>
 
 ## Release Notes
@@ -36,7 +50,7 @@ Generate mock json from typescript class and interface.
 
 ### 1.1.0
 
-+ supprot tuple
++ support tuple
 + friendly error message
 
 ## Links
